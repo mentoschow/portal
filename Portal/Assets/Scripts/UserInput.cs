@@ -4,42 +4,80 @@ using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-    [Header("===== Output Signals =====")]
-    public float Dup;
-    public float Dright;  //将输入信号转成数字信号
-    public float Dmag;
-    public Vector3 Dvec;
+    //键盘输入
+    private string keyUp = "w";
+    private string keyDown = "s";
+    private string keyLeft = "a";
+    private string keyRight = "d";
+    private string keyJump = "space";
 
+    //移动量
+    public float Forward;  //向前移动
+    public float Right;  //向右移动
+
+    //使用SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime)需要的参数
+    private float targetForward;
+    private float targetRight;
+    private float velocityForward;
+    private float velocityRight;
+    private float smoothTime = 0.1f;
+
+    //跳跃
     public bool jump;
+    public float time;
 
-    public float Jup;
-    public float Jright;
+    //输入开关
+    public bool inputEnabled = true;
 
-    public bool quit;
-
-    //double trigger type
-
-    [Header("===== Others =====")]
-    public bool inputEnabled = true;  //开关
-
-    protected float targetDup;
-    protected float targetDright;
-    protected float velocityDup;
-    protected float velocityDright;  //应用smoothDamp
-
-    protected Vector2 SquareToCircle(Vector2 input)
+    void Update()
     {
-        Vector2 output;
+        //计算移动量
+        targetForward = (Input.GetKey(keyUp) ? 1.0f : 0) - (Input.GetKey(keyDown) ? 1.0f : 0);
+        targetRight = (Input.GetKey(keyRight) ? 1.0f : 0) - (Input.GetKey(keyLeft) ? 1.0f : 0);
+        Forward = Mathf.SmoothDamp(Forward, targetForward, ref velocityForward, smoothTime);
+        Right = Mathf.SmoothDamp(Right, targetRight, ref velocityRight, smoothTime);
 
-        output.x = input.x * Mathf.Sqrt(1 - (input.y * input.y) / 2.0f);
-        output.y = input.y * Mathf.Sqrt(1 - (input.x * input.x) / 2.0f);
+        //clamp
+        if (Forward > 0.99)
+        {
+            Forward = 1.0f;
+        }
+        else if(Forward < -0.99)
+        {
+            Forward = -1.0f;
+        }
+        else if(Forward > 0 && Forward < 0.01 || Forward < 0 && Forward > -0.01)
+        {
+            Forward = 0.0f;
+        }
+        if (Right > 0.99)
+        {
+            Right = 1.0f;
+        }
+        else if (Right < -0.99)
+        {
+            Right = -1.0f;
+        }
+        else if (Right > 0 && Right < 0.01 || Right < 0 && Right > -0.01)
+        {
+            Right = 0.0f;
+        }
 
-        return output;
-    }
+        //计算跳跃
+        if (Input.GetKeyDown(keyJump))
+        {
+            jump = true;
+        }
+        if(Input.GetKeyUp(keyJump))
+        {
+            jump = false;
+        }
 
-    protected void UpdateDmagDvec(float Dup2, float Dright2)
-    {
-        Dmag = Mathf.Sqrt((Dup2 * Dup2) + (Dright2 * Dright2));  //单位化
-        Dvec = Dright2 * transform.right + Dup2 * transform.forward;  //摇杆推的方向
+        //关闭输入
+        if (inputEnabled == false)
+        {
+            Forward = 0.0f;
+            Right = 0.0f;
+        }
     }
 }

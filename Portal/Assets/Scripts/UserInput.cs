@@ -11,9 +11,15 @@ public class UserInput : MonoBehaviour
     private string keyRight = "d";
     private string keyJump = "space";
 
+    //鼠标输入
+    private string mouseForward = "Mouse Y";
+    private string mouseRight = "Mouse X";
+
     //移动量
     public float Forward;  //向前移动
     public float Right;  //向右移动
+    public float CamForward;  //镜头前移动量
+    public float CamRight;  //镜头右移动量
 
     //使用SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime)需要的参数
     private float targetForward;
@@ -25,6 +31,9 @@ public class UserInput : MonoBehaviour
     //跳跃
     public bool jump;
     public float time;
+
+    //鼠标控制量
+    public bool aiming;
 
     //输入开关
     public bool inputEnabled = true;
@@ -72,6 +81,13 @@ public class UserInput : MonoBehaviour
         {
             jump = false;
         }
+
+        //计算镜头旋转量
+        CamForward = Input.GetAxis(mouseForward);
+        CamRight = Input.GetAxis(mouseRight);
+
+        //获取鼠标输入
+        aiming = Input.GetMouseButton(1);
 
         //关闭输入
         if (inputEnabled == false)

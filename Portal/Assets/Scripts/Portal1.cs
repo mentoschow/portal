@@ -5,14 +5,31 @@ using UnityEngine;
 public class Portal1 : MonoBehaviour
 {
     [SerializeField]
-    private CameraController cam;
+    private PortalController portal_con;
+    public Shader Portal1Shader;
+    public RenderTexture RenTex;
+    public Material material;
 
     private void Start()
     {
-        cam = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        portal_con = GameObject.Find("player").GetComponent<PortalController>();
+        SetShader(Portal1Shader, material, RenTex);
+    }
+
+    private void Update()
+    {
+        
     }
     private void OnTriggerEnter(Collider other)
     {
         
+    }
+
+    void SetShader(Shader s, Material m, RenderTexture RT)
+    {
+        if(s != null)
+        {
+            m.SetTexture("_MainTex", RT);
+        }
     }
 }

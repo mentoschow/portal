@@ -34,6 +34,7 @@ public class UserInput : MonoBehaviour
 
     //鼠标控制量
     public bool aiming;
+    public bool shooting;
 
     //输入开关
     public bool inputEnabled = true;
@@ -88,6 +89,7 @@ public class UserInput : MonoBehaviour
 
         //获取鼠标输入
         aiming = Input.GetMouseButton(1);
+        shooting = Input.GetMouseButtonDown(0);
 
         //关闭输入
         if (inputEnabled == false)

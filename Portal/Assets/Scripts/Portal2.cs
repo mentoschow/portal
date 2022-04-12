@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class Portal2 : MonoBehaviour
 {
-    [SerializeField]
-    private CameraController cam;
+    private PortalController portal_con;
 
     private void Start()
     {
-        cam = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        portal_con = GameObject.Find("player").GetComponent<PortalController>();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "isPortal1")
         {
-            GameObject.Destroy(this.gameObject);
-            cam.portal_count--;
+            portal_con.portal2.SetActive(false);
+            portal_con.portal_count--;
         }
     }
 }
